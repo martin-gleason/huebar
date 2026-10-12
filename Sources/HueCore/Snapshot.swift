@@ -58,7 +58,7 @@ public struct HueSnapshot {
             }.sorted(by: byName)
         }
         func make(_ g: Group, _ kind: Kind) -> Room {
-            Room(id: g.id, name: g.metadata.name, kind: kind, groupedLightID: g.groupedLightID,
+            Room(id: g.id, name: Validation.displayName(g.metadata.name), kind: kind, groupedLightID: g.groupedLightID,
                  lights: members(of: g),
                  scenes: (scenesByGroup[g.id] ?? []).sorted { $0.metadata.name.localizedCaseInsensitiveCompare($1.metadata.name) == .orderedAscending })
         }

@@ -26,15 +26,26 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         statusItem.button?.image = NSImage(systemSymbolName: "lightbulb", accessibilityDescription: "Hue")
         menu.delegate = self
         statusItem.menu = menu
+        Settings.migrateLegacyDefaults()
         makeClient()
         rebuildMenu()
         Task { await refresh() }
     }
 
+    private var isPaired: Bool { client?.config.appKey != nil }
+
     private func makeClient() {
-        guard let host = Settings.host else { client = nil; return }
-        let c = HueClient(config: .init(host: host, appKey: Settings.appKey, certFingerprint: Settings.certFingerprint))
-        c.onFingerprintLearned = { Settings.certFingerprint = $0 }
+        guard let host = Settings.host, (try? Validation.host(host)) != nil else { client = nil; return }
+        // The credential only counts if it was issued for this exact address.
+        let cred = Settings.credential.flatMap { $0.host == host ? $0 : nil }
+        let c = HueClient(config: .init(host: host, appKey: cred?.appKey,
+                                        bridgeID: cred?.bridgeID, certFingerprint: cred?.certFingerprint))
+        c.onTrustEstablished = { cfg in
+            Task { @MainActor in
+                guard let key = cfg.appKey else { return }   // persisted by pair() once a key exists
+                Settings.credential = BridgeCredential(host: cfg.host, appKey: key, bridgeID: cfg.bridgeID, certFingerprint: cfg.certFingerprint)
+            }
+        }
         client = c
     }
 
@@ -82,13 +93,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     private func rebuildMenu() {
         menu.removeAllItems()
         if let err = lastError {
-            menu.addItem(disabled("⚠︎ \(err)"))
+            menu.addItem(disabled("⚠︎ \(Validation.displayName(err, maxLength: 120))"))
             menu.addItem(.separator())
         }
         if client == nil {
             menu.addItem(action("Find Bridge…", #selector(findBridge)))
             menu.addItem(action("Set Bridge Address…", #selector(setAddress)))
-        } else if Settings.appKey == nil {
+        } else if !isPaired {
             menu.addItem(action("Pair with Bridge…", #selector(pair)))
             menu.addItem(action("Set Bridge Address…", #selector(setAddress)))
         } else {
@@ -123,7 +134,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         if !room.scenes.isEmpty {
             sub.addItem(.separator())
             sub.addItem(.sectionHeader(title: "Scenes"))
-            for s in room.scenes { sub.addItem(action(s.metadata.name, #selector(recallScene(_:)), ref: .scene(s.id, roomID: room.id))) }
+            for s in room.scenes { sub.addItem(action(s.displayName, #selector(recallScene(_:)), ref: .scene(s.id, roomID: room.id))) }
         }
         if !room.lights.isEmpty {
             sub.addItem(.separator())
@@ -135,7 +146,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     }
 
     private func lightItem(_ light: Light) -> NSMenuItem {
-        let item = action(light.metadata.name, #selector(toggleLight(_:)), ref: .light(light.id))
+        let item = action(light.displayName, #selector(toggleLight(_:)), ref: .light(light.id))
         item.state = light.isOn ? .on : .off
         return item
     }
@@ -248,16 +259,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         alert.window.initialFirstResponder = field
         NSApp.activate(ignoringOtherApps: true)
         guard alert.runModal() == .alertFirstButtonReturn else { return }
-        let host = field.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !host.isEmpty else { return }
+        guard let host = try? Validation.host(field.stringValue) else {
+            show("Not a valid address", "Enter an IP address such as 192.168.1.2, or a plain hostname.")
+            return
+        }
         setHost(host)
-        if Settings.appKey == nil { pair() }
+        if !isPaired { pair() }
     }
 
     private func setHost(_ host: String) {
         if host != Settings.host {
-            Settings.appKey = nil
-            Settings.certFingerprint = nil
+            Settings.credential = nil      // a new address means a new bridge: re-pair and re-verify identity
             snapshot = .empty
         }
         Settings.host = host
@@ -278,7 +290,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         guard alert.runModal() == .alertFirstButtonReturn else { return }
         Task {
             do {
-                Settings.appKey = try await client.pair(deviceType: "huebar#mac")
+                let key = try await client.pair(deviceType: "huebar#mac")
+                let cfg = client.config
+                Settings.credential = BridgeCredential(host: cfg.host, appKey: key, bridgeID: cfg.bridgeID, certFingerprint: cfg.certFingerprint)
                 makeClient()
                 await refresh()
                 rebuildMenu()

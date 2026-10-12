@@ -10,7 +10,8 @@ rm -rf "$APP"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 cp .build/release/HueBar "$APP/Contents/MacOS/HueBar"
 cp Resources/Info.plist "$APP/Contents/Info.plist"
-codesign --force --sign - "$APP"
+# App Sandbox + hardened runtime. Ad-hoc identity: replace "-" with a Developer ID to notarize.
+codesign --force --options runtime --entitlements Resources/HueBar.entitlements --sign - "$APP"
 echo "Built $APP"
 if [[ "${1:-}" == "--install" ]]; then
   mkdir -p ~/Applications

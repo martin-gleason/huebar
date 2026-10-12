@@ -23,6 +23,7 @@ public struct Light: Codable, Identifiable {
     public let metadata: Metadata
     public var on: OnState?
     public var isOn: Bool { on?.on ?? false }
+    public var displayName: String { Validation.displayName(metadata.name) }
 }
 
 /// A `room` or a `zone`. Rooms contain devices; zones contain lights directly.
@@ -39,6 +40,7 @@ public struct Scene: Codable, Identifiable {
     public let id: String
     public let metadata: Metadata
     public let group: ResourceRef        // the room or zone the scene belongs to
+    public var displayName: String { Validation.displayName(metadata.name) }
 }
 
 /// The whole-home group; its grouped_light service controls every light at once.
