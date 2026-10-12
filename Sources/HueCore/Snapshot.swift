@@ -1,3 +1,4 @@
+// Created: 2026-10-12 11:06 -05:00 · Edited: 2026-10-12 11:30 -05:00
 import Foundation
 
 /// An immutable-ish picture of the home, shaped for a menu: rooms (then zones), each with

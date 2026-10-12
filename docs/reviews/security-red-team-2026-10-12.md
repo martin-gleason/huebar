@@ -1,5 +1,7 @@
 # Security red-team review — HueBar 0.1 → 0.2
 
+Created: 2026-10-12 11:17 -05:00 · Edited: 2026-10-12 11:30 -05:00
+
 **Date:** 2026-10-12 · **Reviewer:** agent, acting as an adversary with the public source · **Scope:** everything in the repository at commit `6dca2e6` (the first commit) · **Outcome:** 7 findings, 6 fixed in C2, 1 inherent to the Hue platform and documented. **Repository stays private until the owner ratifies D6–D8 (`O5`, `O6`).**
 
 ## Threat model

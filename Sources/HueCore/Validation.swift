@@ -1,3 +1,4 @@
+// Created: 2026-10-12 11:17 -05:00 · Edited: 2026-10-12 11:30 -05:00
 import Foundation
 
 /// Input validation for everything that arrives from outside the process: the bridge

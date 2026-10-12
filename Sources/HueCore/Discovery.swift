@@ -1,3 +1,4 @@
+// Created: 2026-10-12 11:06 -05:00 · Edited: 2026-10-12 11:30 -05:00
 import Foundation
 
 /// Finds bridges on the same network via Signify's cloud lookup (the bridge reports its

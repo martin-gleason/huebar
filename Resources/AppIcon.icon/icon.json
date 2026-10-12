@@ -1,0 +1,78 @@
+{
+  "fill" : {
+    "automatic-gradient" : "display-p3:0.16078,0.20784,0.56078,1.00000"
+  },
+  "groups" : [
+    {
+      "layers" : [
+        {
+          "glass" : true,
+          "hidden" : false,
+          "image-name" : "Base.svg",
+          "name" : "Base",
+          "fill-specializations" : [
+            { "value" : { "automatic-gradient" : "extended-gray:0.78000,1.00000" } },
+            { "appearance" : "dark", "value" : { "automatic-gradient" : "extended-gray:0.62000,1.00000" } },
+            { "appearance" : "tinted", "value" : { "automatic-gradient" : "extended-gray:1.00000,1.00000" } }
+          ]
+        },
+        {
+          "glass" : false,
+          "hidden" : false,
+          "image-name" : "Ridges.svg",
+          "name" : "Ridges",
+          "opacity-specializations" : [
+            { "value" : 1 },
+            { "appearance" : "tinted", "value" : 0.3 }
+          ]
+        }
+      ],
+      "shadow" : { "kind" : "neutral", "opacity" : 0.5 },
+      "translucency" : { "enabled" : true, "value" : 0.5 }
+    },
+    {
+      "layers" : [
+        {
+          "glass" : false,
+          "hidden" : false,
+          "image-name" : "Glow.svg",
+          "name" : "Glow",
+          "opacity-specializations" : [
+            { "value" : 1 },
+            { "appearance" : "tinted", "value" : 0.25 }
+          ]
+        },
+        {
+          "glass" : true,
+          "hidden" : false,
+          "image-name" : "Bulb.svg",
+          "name" : "Bulb",
+          "fill-specializations" : [
+            { "value" : { "automatic-gradient" : "display-p3:1.00000,0.86000,0.55000,1.00000" } },
+            { "appearance" : "dark", "value" : { "automatic-gradient" : "display-p3:1.00000,0.80000,0.42000,1.00000" } },
+            { "appearance" : "tinted", "value" : { "automatic-gradient" : "extended-gray:1.00000,1.00000" } }
+          ]
+        },
+        {
+          "glass" : false,
+          "hidden" : false,
+          "image-name" : "Filament.svg",
+          "name" : "Filament",
+          "fill-specializations" : [
+            { "appearance" : "tinted", "value" : { "solid" : "extended-gray:1.00000,1.00000" } }
+          ],
+          "opacity-specializations" : [
+            { "value" : 1 },
+            { "appearance" : "tinted", "value" : 0.6 }
+          ]
+        }
+      ],
+      "shadow" : { "kind" : "neutral", "opacity" : 0.6 },
+      "translucency" : { "enabled" : true, "value" : 0.55 }
+    }
+  ],
+  "supported-platforms" : {
+    "circles" : [ "watchOS" ],
+    "squares" : "shared"
+  }
+}

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <!-- globe + neck as one silhouette; rendered as glass by the system -->
+  <path fill="#FFFFFF" d="M 512 196
+    C 385 196 282 299 282 426
+    C 282 505 322 566 372 612
+    C 392 630 400 650 404 672
+    L 404 700 L 620 700 L 620 672
+    C 624 650 632 630 652 612
+    C 702 566 742 505 742 426
+    C 742 299 639 196 512 196 Z"/>
+</svg>

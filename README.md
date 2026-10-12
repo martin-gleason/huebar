@@ -1,5 +1,7 @@
 # HueBar
 
+Created: 2026-10-12 11:06 -05:00 · Edited: 2026-10-12 11:30 -05:00
+
 A barebones Mac menu bar app for Philips Hue: lights and scenes, grouped by room, on and off. Nothing else.
 
 ```

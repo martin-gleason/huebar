@@ -1,3 +1,4 @@
+// Created: 2026-10-12 11:06 -05:00 · Edited: 2026-10-12 11:30 -05:00
 import Foundation
 
 // Minimal Codable views of Hue CLIP v2 resources. Only the fields HueBar uses are

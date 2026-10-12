@@ -1,5 +1,7 @@
 # HueBar — SPEC
 
+Created: 2026-10-12 11:06 -05:00 · Edited: 2026-10-12 11:30 -05:00
+
 HueBar is a Mac menu bar app that turns Hue lights and scenes on and off, grouped by room, with nothing else in the way.
 
 > **Vision sentence status: proposed by the agent on 2026-10-12, not yet ratified by the owner (`O1`).**
